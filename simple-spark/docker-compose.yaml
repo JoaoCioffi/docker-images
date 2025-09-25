@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  spark-master:
+    image: bitnami/spark:3.5
+    container_name: spark-master
+    ports:
+      - '8080:8080'
+      - '7077:7077'
+
+    volumes:
+      - ./jars:/opt/bitnami/spark/custom-jars
+    environment:
+      - SPARK_MODE=master
+      - SPARK_EXTRA_CLASSPATH=/opt/bitnami/spark/custom-jars/*
+      - SPARK_RPC_AUTHENTICATION_ENABLED=no
+      - SPARK_RPC_ENCRYPTION_ENABLED=no
+      - SPARK_AUTHENTICATION_ENABLED=no
+
+  spark-worker:
+    image: bitnami/spark:3.5
+    container_name: spark-worker-1
+    depends_on:
+      - spark-master
+
+    volumes:
+      - ./jars:/opt/bitnami/spark/custom-jars
+    environment:
+      - SPARK_MODE=worker
+      - SPARK_MASTER_URL=spark://spark-master:7077
+      - SPARK_EXTRA_CLASSPATH=/opt/bitnami/spark/custom-jars/*
+      - SPARK_RPC_AUTHENTICATION_ENABLED=no
+      - SPARK_RPC_ENCRYPTION_ENABLED=no
+      - SPARK_AUTHENTICATION_ENABLED=no
