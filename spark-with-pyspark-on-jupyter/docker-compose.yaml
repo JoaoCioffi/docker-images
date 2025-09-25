@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  spark-jupyter:
+    image: jupyter/pyspark-notebook:latest
+    container_name: pyspark_jupyter_lab
+    
+    volumes:
+      - ./app:/home/jovyan/work/app
+      - ./data:/home/jovyan/work/data
+
+    working_dir: /home/jovyan/work
+
+    ports:
+      - "8888:8888" # Porta do Jupyter
+      - "4040:4040" # Porta da Spark UI
